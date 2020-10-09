@@ -9,9 +9,8 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long roomId;
-    private String name;
+    private String roomName;
     private int seats;
-    private String[] facilities;
     private LocalDateTime createdAt;
 
     @ManyToMany
@@ -24,13 +23,21 @@ public class Room {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "facility",
+            name = "roomFacilities",
             joinColumns = @JoinColumn(name = "roomId")
     )
     private List<Facility> facility;
 
 
     public Room() {
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     public List<Booking> getBookings() {
@@ -49,28 +56,12 @@ public class Room {
         this.roomId = roomId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getSeats() {
         return seats;
     }
 
     public void setSeats(int seats) {
         this.seats = seats;
-    }
-
-    public String[] getFacilities() {
-        return facilities;
-    }
-
-    public void setFacilities(String[] facilities) {
-        this.facilities = facilities;
     }
 
     public LocalDateTime getCreatedAt() {

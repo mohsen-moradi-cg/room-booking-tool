@@ -1,5 +1,6 @@
 package com.RoomBookingTool.Server;
 
+import com.RoomBookingTool.Server.models.Facility;
 import com.RoomBookingTool.Server.repositories.RoomJpaRepository;
 import com.google.gson.Gson;
 import com.RoomBookingTool.Server.models.Room;
@@ -10,6 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -24,17 +31,38 @@ public class RoomTests {
 
     Room room = new Room();
 
+    private Room roomObject() {
+        Room room = new Room();
+        Facility facility = new Facility();
+        facility.setFacilityName("screen");
+
+        List<Facility> facilities = new ArrayList<>();
+        facilities.add(facility);
+
+        room.setRoomName("A");
+        room.setSeats(6);
+        room.setFacility(facilities);
+        return room;
+    }
+
     @Test
     public void testCreateRoom() throws Exception {
-        room.setName("A");
+        room.setRoomName("A");
         room.setSeats(6);
         createRoom(room);
         roomJpaRepository.deleteAll();
     }
 
     @Test
+    public void testCreateRoomWithFacility() throws Exception {
+        Room room = roomObject();
+        createRoom(room);
+        roomJpaRepository.deleteAll();
+    }
+
+    @Test
     public void testDeleteRoom() throws Exception {
-        room.setName("A");
+        room.setRoomName("A");
         room.setSeats(6);
         Room newRoom =  roomJpaRepository.saveAndFlush(room);
         deleteRoomByRoomId(newRoom.getRoomId());
@@ -43,7 +71,7 @@ public class RoomTests {
 
     @Test
     public void testGetListOfRooms() throws Exception {
-        room.setName("A");
+        room.setRoomName("A");
         room.setSeats(6);
         roomJpaRepository.saveAndFlush(room);
         roomJpaRepository.saveAndFlush(room);
@@ -54,12 +82,13 @@ public class RoomTests {
 
     @Test
     public void testGetRoomByRoomId() throws Exception {
-        room.setName("A");
+        room.setRoomName("A");
         room.setSeats(6);
         Room newRoom =  roomJpaRepository.saveAndFlush(room);
         getRoomByRoomId(newRoom.getRoomId());
         roomJpaRepository.deleteAll();
     }
+
 
     public void createRoom( Room room ) throws Exception {
         Gson gson = new Gson();

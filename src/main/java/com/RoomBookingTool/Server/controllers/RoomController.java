@@ -42,50 +42,50 @@ public class RoomController {
     }
 
     // needs work
-    @RequestMapping(method = {RequestMethod.POST}, value = "/room")
-    public ResponseEntity<List<Room>> getRoomsByQuery(@RequestBody final Room room) {
-        try {
-            List<Room> rooms = roomJpaRepository.findBySeatsGreaterThanEqual(room.getSeats());
-            Gson gson = new Gson();
-            String jsonRoom = gson.toJson( room.getFacilities() );
-            Room[] filteredRooms = rooms.stream().filter(
-                    r -> {
-                        for(String f : r.getFacilities()) {
-                            System.out.println(jsonRoom + " ----- " + f);
-                            if(jsonRoom.contains(f)) {
-                                return true;
-                            }
-                            return false;
-                        }
-                        return false;
-                    }
-            ).toArray(Room[]::new);
-            List<Room> filteredRoomsList = Arrays.asList(filteredRooms);
-            return new ResponseEntity( filteredRoomsList, HttpStatus.OK );
-        }catch (final Exception e){
-            return new ResponseEntity( "Something went wrong, please try again later.", HttpStatus.BAD_REQUEST );
-        }
-    }
-
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public Room createRoom(@RequestBody final Room room){
-//            room.setCreatedAt(LocalDateTime.now());
-//            return roomJpaRepository.saveAndFlush(room);
+//    @RequestMapping(method = {RequestMethod.POST}, value = "/room")
+//    public ResponseEntity<List<Room>> getRoomsByQuery(@RequestBody final Room room) {
+//        try {
+//            List<Room> rooms = roomJpaRepository.findBySeatsGreaterThanEqual(room.getSeats());
+//            Gson gson = new Gson();
+//            String jsonRoom = gson.toJson( room.getFacilities() );
+//            Room[] filteredRooms = rooms.stream().filter(
+//                    r -> {
+//                        for(String f : r.getFacilities()) {
+//                            System.out.println(jsonRoom + " ----- " + f);
+//                            if(jsonRoom.contains(f)) {
+//                                return true;
+//                            }
+//                            return false;
+//                        }
+//                        return false;
+//                    }
+//            ).toArray(Room[]::new);
+//            List<Room> filteredRoomsList = Arrays.asList(filteredRooms);
+//            return new ResponseEntity( filteredRoomsList, HttpStatus.OK );
+//        }catch (final Exception e){
+//            return new ResponseEntity( "Something went wrong, please try again later.", HttpStatus.BAD_REQUEST );
+//        }
 //    }
 
-   //  Create a room "/api/rooms"
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Room> createRoom(@RequestBody final Room room){
-        try {
+    public Room createRoom(@RequestBody final Room room){
             room.setCreatedAt(LocalDateTime.now());
-            Room newRoom = roomJpaRepository.saveAndFlush(room);
-            return new ResponseEntity( newRoom, HttpStatus.CREATED );
-        }catch (final Exception e){
-            return new ResponseEntity( e.getMessage(), HttpStatus.NOT_FOUND );
-        }
+            return roomJpaRepository.saveAndFlush(room);
     }
+
+   //  Create a room "/api/rooms"
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ResponseEntity<Room> createRoom(@RequestBody final Room room){
+//        try {
+//            room.setCreatedAt(LocalDateTime.now());
+//            Room newRoom = roomJpaRepository.saveAndFlush(room);
+//            return new ResponseEntity( newRoom, HttpStatus.CREATED );
+//        }catch (final Exception e){
+//            return new ResponseEntity( e.getMessage(), HttpStatus.NOT_FOUND );
+//        }
+//    }
 
     // Delete a room by roomId
     @RequestMapping( value = "{roomId}", method = RequestMethod.DELETE)
@@ -105,7 +105,7 @@ public class RoomController {
             Room existingRoom = roomJpaRepository.getOne(roomId);
             BeanUtils.copyProperties(room, existingRoom, "roomId");
             Room updatedRoom = roomJpaRepository.saveAndFlush(existingRoom);
-            return new ResponseEntity( "Room with this '" + updatedRoom.getName() + "' been updated.", HttpStatus.OK );
+            return new ResponseEntity( "Room with this '" + updatedRoom.getRoomName() + "' been updated.", HttpStatus.OK );
         }catch (final Exception e){
             return new ResponseEntity( "Something went wrong.", HttpStatus.NOT_FOUND );
         }

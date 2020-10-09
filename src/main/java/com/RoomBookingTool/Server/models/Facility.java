@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity(name = "facility")
 public class Facility {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long facilityId;
     private Long roomId;
     private String facilityName;
