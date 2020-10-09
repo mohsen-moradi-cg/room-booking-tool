@@ -1,0 +1,17 @@
+app:
+  version: 1.0.0
+
+
+server:
+  port: 8080
+
+#spring:
+#  datasource:
+#    url: "jdbc:postgresql://localhost:5432/room_booking_tool"
+#    username: "postgres"
+#    password: "postgres"
+spring:
+  datasource:
+    url: ${MY_SQL_DB_URL}
+    username: ${MY_SQL_DB_USER_NAME}
+    password: ${MY_SQL_DB_PASSWORD}
